@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Memory Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f0f0f0;
+    }
+    #game {
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-gap: 10px;
+    }
+    .card {
+      width: 100px;
+      height: 100px;
+      background: #333;
+      color: white;
+      font-size: 2em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .card.flipped {
+      background: #fff;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+  <script>
+    const symbols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    // Duplicate and shuffle
+    let deck = symbols.concat(symbols).sort(() => Math.random() - 0.5);
+    const gameDiv = document.getElementById('game');
+    let flippedCards = [];
+
+    deck.forEach((symbol, index) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.symbol = symbol;
+      card.dataset.index = index;
+      card.addEventListener('click', flipCard);
+      gameDiv.appendChild(card);
+    });
+
+    function flipCard() {
+      if (this.classList.contains('flipped') || flippedCards.length === 2) return;
+      this.classList.add('flipped');
+      this.innerText = this.dataset.symbol;
+      flippedCards.push(this);
+      if (flippedCards.length === 2) {
+        setTimeout(checkMatch, 800);
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+      if (card1.dataset.symbol !== card2.dataset.symbol) {
+        card1.classList.remove('flipped');
+        card1.innerText = '';
+        card2.classList.remove('flipped');
+        card2.innerText = '';
+      }
+      flippedCards = [];
+    }
+  </script>
+</body>
+</html>

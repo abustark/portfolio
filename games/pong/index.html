@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pong Game</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas { background: #222; }
+  </style>
+</head>
+<body>
+  <canvas id="pong" width="600" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById('pong');
+    const ctx = canvas.getContext('2d');
+
+    const paddleWidth = 10, paddleHeight = 80, ballSize = 10;
+    let leftPaddle = { x: 10, y: canvas.height / 2 - paddleHeight / 2 };
+    let rightPaddle = { x: canvas.width - 20, y: canvas.height / 2 - paddleHeight / 2 };
+    let ball = { x: canvas.width / 2, y: canvas.height / 2, vx: 4, vy: 4 };
+
+    // Move left paddle with mouse
+    document.addEventListener('mousemove', e => {
+      const rect = canvas.getBoundingClientRect();
+      leftPaddle.y = e.clientY - rect.top - paddleHeight / 2;
+    });
+
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function update() {
+      ball.x += ball.vx;
+      ball.y += ball.vy;
+      // Bounce off top and bottom
+      if (ball.y <= 0 || ball.y + ballSize >= canvas.height) ball.vy *= -1;
+      // Bounce off paddles
+      if (
+        ball.x <= leftPaddle.x + paddleWidth &&
+        ball.y + ballSize > leftPaddle.y &&
+        ball.y < leftPaddle.y + paddleHeight
+      ) {
+        ball.vx *= -1;
+      }
+      if (
+        ball.x + ballSize >= rightPaddle.x &&
+        ball.y + ballSize > rightPaddle.y &&
+        ball.y < rightPaddle.y + paddleHeight
+      ) {
+        ball.vx *= -1;
+      }
+      // Simple AI for right paddle
+      rightPaddle.y += ((ball.y - (rightPaddle.y + paddleHeight / 2))) * 0.1;
+      // Reset if out of bounds
+      if (ball.x < 0 || ball.x > canvas.width) {
+        ball.x = canvas.width / 2;
+        ball.y = canvas.height / 2;
+        ball.vx = -ball.vx;
+      }
+    }
+
+    function draw() {
+      ctx.fillStyle = '#222';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(leftPaddle.x, leftPaddle.y, paddleWidth, paddleHeight);
+      ctx.fillRect(rightPaddle.x, rightPaddle.y, paddleWidth, paddleHeight);
+      ctx.fillRect(ball.x, ball.y, ballSize, ballSize);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>

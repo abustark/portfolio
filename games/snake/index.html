@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snake Game</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    canvas { background: #111; }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="400" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
+    let snake = [{ x: 10, y: 10 }];
+    let vx = 0, vy = 0;
+    let food = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
+
+    function gameLoop() {
+      requestAnimationFrame(gameLoop);
+      // Move snake
+      const head = { x: snake[0].x + vx, y: snake[0].y + vy };
+      head.x = (head.x + tileCount) % tileCount;
+      head.y = (head.y + tileCount) % tileCount;
+      snake.unshift(head);
+
+      // Check food collision
+      if (head.x === food.x && head.y === food.y) {
+        food = { x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount) };
+      } else {
+        snake.pop();
+      }
+
+      // Draw
+      ctx.fillStyle = '#111';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'lime';
+      snake.forEach(part => ctx.fillRect(part.x * gridSize, part.y * gridSize, gridSize - 2, gridSize - 2));
+      ctx.fillStyle = 'red';
+      ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+    }
+
+    document.addEventListener('keydown', e => {
+      switch (e.key) {
+        case 'ArrowUp': if (vy === 0) { vx = 0; vy = -1; } break;
+        case 'ArrowDown': if (vy === 0) { vx = 0; vy = 1; } break;
+        case 'ArrowLeft': if (vx === 0) { vx = -1; vy = 0; } break;
+        case 'ArrowRight': if (vx === 0) { vx = 1; vy = 0; } break;
+      }
+    });
+    gameLoop();
+  </script>
+</body>
+</html>

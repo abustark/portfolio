@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tic Tac Toe Game</title>
+  <style>
+    /* Basic reset and body styling */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    /* Grid for the game board */
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 5px;
+      margin: 0 auto;
+    }
+    .cell {
+      background: #fff;
+      border: 2px solid #ccc;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cell:hover {
+      background: #f0f0f0;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1.5em;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Tic Tac Toe</h1>
+    <div id="board"></div>
+    <div id="message"></div>
+    <button id="resetBtn">Reset Game</button>
+  </div>
+
+  <script>
+    // Get references to DOM elements
+    const boardElement = document.getElementById('board');
+    const messageElement = document.getElementById('message');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Game state variables
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let currentPlayer = 'X';
+    let gameActive = true;
+
+    // Winning combinations
+    const winningConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    // Function to initialize and render the board
+    function createBoard() {
+      boardElement.innerHTML = '';
+      board.forEach((cell, index) => {
+        const cellElement = document.createElement('div');
+        cellElement.classList.add('cell');
+        cellElement.dataset.index = index;
+        cellElement.innerText = cell;
+        cellElement.addEventListener('click', handleCellClick);
+        boardElement.appendChild(cellElement);
+      });
+    }
+
+    // Handler for cell clicks
+    function handleCellClick(e) {
+      const index = e.target.dataset.index;
+      
+      // Ignore click if cell is already filled or game is over
+      if (board[index] !== '' || !gameActive) return;
+      
+      // Set cell for current player and update UI
+      board[index] = currentPlayer;
+      e.target.innerText = currentPlayer;
+      
+      // Check if the move resulted in a win or a tie
+      checkResult();
+
+      // Switch player if game is still active
+      if (gameActive) {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        messageElement.innerText = "Player " + currentPlayer + "'s turn";
+      }
+    }
+
+    // Function to check for win or tie conditions
+    function checkResult() {
+      let roundWon = false;
+      for (let condition of winningConditions) {
+        const [a, b, c] = condition;
+        if (board[a] === '' || board[b] === '' || board[c] === '') {
+          continue;
+        }
+        if (board[a] === board[b] && board[b] === board[c]) {
+          roundWon = true;
+          break;
+        }
+      }
+      if (roundWon) {
+        messageElement.innerText = "Player " + currentPlayer + " wins!";
+        gameActive = false;
+        return;
+      }
+      // Check for tie (if board is full)
+      if (!board.includes('')) {
+        messageElement.innerText = "It's a tie!";
+        gameActive = false;
+      }
+    }
+
+    // Reset the game to the initial state
+    function resetGame() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      gameActive = true;
+      currentPlayer = 'X';
+      messageElement.innerText = "Player " + currentPlayer + "'s turn";
+      createBoard();
+    }
+
+    // Add event listener for reset button
+    resetBtn.addEventListener('click', resetGame);
+
+    // Initialize the game on page load
+    resetGame();
+  </script>
+</body>
+</html>
