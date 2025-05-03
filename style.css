@@ -34,11 +34,36 @@ html {
     font-size: 16px;
 }
 
+/* --- Updated Body Rule --- */
 body {
     font-family: var(--body-font);
-    background-color: var(--primary-bg-color);
     color: var(--text-color-light);
     line-height: 1.6;
+
+    /* Gradient Background */
+    background: linear-gradient(-45deg, #0a192f, #112240, #1a0f2e, #112240); /* Dark Blue -> Darker Blue -> Dark Purple -> Darker Blue */
+    background-size: 400% 400%;
+    animation: gradientBG 25s ease infinite;
+
+    /* Ensure body covers viewport */
+    min-height: 100vh;
+    width: 100%; /* Prevent potential horizontal overflow issues with animation */
+    overflow-x: hidden; /* Prevent horizontal scrollbar caused by large background */
+}
+/* --- End of Updated Body Rule --- */
+
+
+/* Add this separate @keyframes rule anywhere in the CSS file */
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .container {
@@ -156,6 +181,10 @@ img {
     display: flex;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    background: linear-gradient(-45deg, #0a192f, #112240, #1a0f2e, #112240);
+    background-size: 400% 400%;
+    animation: gradientBG 25s ease infinite;
+    overflow: hidden;
 }
 
 .navbar {
@@ -253,8 +282,7 @@ img {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    padding-top: var(--navbar-height);
-    /* Optional: Add subtle background pattern or gradient if desired */
+    padding-top: calc(var(--navbar-height) + 4rem); /* Optional: Add subtle background pattern or gradient if desired */
 }
 
 .hero-content {
@@ -280,7 +308,8 @@ img {
     font-weight: var(--font-semibold);
     color: var(--text-color-medium);
     margin-bottom: 1rem;
-    /* Style for typing animation */
+    /* Style for typing animation - ensure element has content */
+    min-height: 1.2em; /* Prevent jump during typing */
 }
 
 .hero-tagline {
@@ -388,6 +417,32 @@ img {
     color: var(--accent-color);
 }
 
+
+/* --- New Code To Add --- */
+/* Style the icons within skill items */
+.skill-item i {
+    font-size: 3rem; /* Make icons larger */
+    display: block; /* Ensure icon takes its own line */
+    margin-bottom: 0.75rem; /* Space between icon and name */
+    color: var(--text-color-light); /* Default icon color */
+    transition: color 0.3s ease;
+}
+
+/* Optional: Style the skill name span */
+.skill-item .skill-name {
+    font-size: 0.9rem;
+    display: block; /* Ensure name is on its own line */
+    color: var(--text-color-medium); /* Subtler color for the name */
+    transition: color 0.3s ease;
+}
+
+/* Change icon and name color on hover */
+.skill-item:hover i,
+.skill-item:hover .skill-name {
+    color: var(--accent-color);
+}
+/* --- End of New Code --- */
+
 /* ========== Projects Section ========== */
 .projects-grid {
     display: grid;
@@ -400,15 +455,16 @@ img {
     border-radius: var(--border-radius);
     overflow: hidden;
     border: 1px solid rgba(199, 112, 240, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .project-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-10px); /* Slightly more lift */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+    background-color: #1A2B4D; /* Slightly lighter shade than secondary-bg for contrast */
 }
 
 .project-image {
@@ -506,6 +562,13 @@ img {
     font-family: inherit;
     font-size: 1rem;
     transition: border-color 0.3s ease;
+    width: 100%; /* Ensure they take full width of container */
+
+}
+
+.contact-form textarea {
+    min-height: 150px; /* Set a minimum height (adjust value as needed) */
+    resize: vertical; /* Allow user to resize vertically */
 }
 
 .contact-form input::placeholder,
@@ -526,6 +589,62 @@ img {
     width: fit-content; /* Size button to content */
 }
 
+/* --- New Code To Add --- */
+.error-message {
+    color: #ff6b6b; /* Reddish color for errors */
+    font-size: 0.85rem;
+    display: block; /* Ensure it takes its own line */
+    margin-top: 0.3rem;
+    min-height: 1.2em; /* Prevent layout shift when message appears/disappears */
+}
+
+/* Style invalid input fields */
+.contact-form input.invalid,
+.contact-form textarea.invalid {
+    border-color: #ff6b6b; /* Red border for invalid fields */
+    box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2); /* Subtle red glow */
+}
+
+/* --- New Code To Add - Form Status Message Styles --- */
+.form-status-message {
+    margin-top: 1.5rem; /* Space above the message */
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    text-align: center;
+    min-height: 1.5em; /* Prevent layout jump */
+    display: block; /* Make it take up space */
+    opacity: 0; /* Hidden by default */
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Styling for when message appears */
+.form-status-message.sending,
+.form-status-message.success,
+.form-status-message.error {
+    opacity: 1;
+}
+
+/* Specific colors */
+.form-status-message.sending {
+    background-color: rgba(136, 146, 176, 0.2); /* --text-color-medium with transparency */
+    color: var(--text-color-medium);
+}
+
+.form-status-message.success {
+    background-color: rgba(100, 255, 218, 0.15); /* Light accent success color (adjust if using purple) */
+    /* background-color: rgba(10, 180, 130, 0.2); */ /* Alternative Greenish */
+    color: #64ffda; /* Or your accent color */
+}
+
+.form-status-message.error {
+    background-color: rgba(255, 107, 107, 0.15); /* Light red error color */
+    color: #ff6b6b;
+}
+/* --- End of New Code --- */
+
+
+
 .contact-socials {
     justify-content: center;
     margin-top: 1.5rem;
@@ -539,6 +658,11 @@ img {
     text-align: center;
     margin-top: 4rem;
     border-top: 1px solid rgba(199, 112, 240, 0.1);
+    background: linear-gradient(-45deg, #0a192f, #112240, #1a0f2e, #112240);
+    background-size: 400% 400%;
+    animation: gradientBG 25s ease infinite;
+    overflow: hidden; /* Prevent gradient overflowing footer boundaries */
+    position: relative; /* Needed if content inside uses absolute/fixed positioning relative to footer */
 }
 
 .footer-content p {
@@ -558,6 +682,27 @@ img {
     height: 20px;
 }
 
+/* --- New Code To Add - Style for Development Status --- */
+.footer-content .development-status {
+    font-style: italic; /* Optional: Make text italic */
+    font-size: 1rem; /* Optional: Slightly smaller text */
+    color: var(--text-color-medium); /* Match other footer text */
+}
+
+.footer-content .development-status i.fa-gears {
+    margin-left: 0.3em; /* Space before the icon */
+    font-size: 0.9em; /* Make icon slightly larger relative to text */
+    /* Optional: Add a subtle animation or color */
+    color: var(--accent-color);
+    animation: spin 4s linear infinite; 
+}
+
+/* Optional: Keyframes for spin animation */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/* --- End of New Code --- */
 
 /* ========== Responsive Design ========== */
 @media (max-width: 768px) {
@@ -629,7 +774,7 @@ img {
     .hero {
         text-align: center;
         min-height: auto; /* Adjust height */
-        padding-top: calc(var(--navbar-height) + 2rem);
+        padding-top: calc(var(--navbar-height) + 4rem);
         padding-bottom: 4rem;
     }
     .hero-content {
@@ -649,7 +794,7 @@ img {
          margin: 0 auto 2rem auto; /* Center image with space below */
     }
      .about-text {
-        text-align: left;
+        text-align: left; /* Keep text aligned left for readability */
     }
 
     .skills-grid {
@@ -672,3 +817,45 @@ img {
     }
 
 }
+
+/* --- New Code To Add - Scroll Animation Styles --- */
+
+/* Base state for elements before animation */
+.project-card,
+.skill-item {
+    /* Keep existing opacity from section fade-in if desired, or manage here */
+    /* opacity: 0; */
+    transform: translateY(30px); /* Start slightly lower */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Ensure section itself is visible first */
+.section.visible .project-card,
+.section.visible .skill-item {
+}
+
+
+/* State for elements *after* they become visible */
+.project-card.animate-in,
+.skill-item.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Optional: Staggered delay for items in a grid */
+/* We can apply these delays dynamically with JS if needed, */
+/* or define a few common ones here */
+.project-card:nth-child(2n).animate-in,
+.skill-item:nth-child(2n).animate-in {
+  transition-delay: 0.1s;
+}
+.project-card:nth-child(3n).animate-in,
+.skill-item:nth-child(3n).animate-in {
+  transition-delay: 0.2s;
+}
+.project-card:nth-child(4n).animate-in,
+.skill-item:nth-child(4n).animate-in {
+  transition-delay: 0.3s;
+}
+
+/* --- End of New Code --- */
