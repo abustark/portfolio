@@ -752,6 +752,7 @@ img {
     }
     .nav-links a {
          font-size: 1.2rem;
+         color: var(--accent-color);
     }
     .nav-resume {
         margin-left: 0;
