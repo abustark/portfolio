@@ -189,9 +189,11 @@ img {
 
 .navbar {
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */ /* We are replacing this */
+    justify-content: flex-start; /* Align all items to the left initially */
     align-items: center;
     height: 100%;
+    width: 100%; /* Ensure navbar takes full width inside the header */
 }
 
 .logo {
@@ -206,6 +208,7 @@ img {
 .nav-links {
     display: flex;
     align-items: center;
+    margin-left: auto; /* This is the key change */
 }
 
 .nav-links li {
