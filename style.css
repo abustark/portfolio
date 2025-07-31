@@ -508,16 +508,31 @@ img {
 }
 
 .project-tech {
-    font-size: 0.85rem;
-    color: var(--text-color-medium);
-    margin-bottom: 1rem;
-    font-style: italic;
+    display: flex;
+    flex-wrap: wrap; /* Allows tags to wrap to the next line if they don't fit */
+    gap: 0.5rem; /* Space between the tags */
+    margin-bottom: 1.5rem; /* Space below the tags, before the buttons */
 }
-.project-tech strong {
-     font-weight: var(--font-medium);
-     color: var(--text-color-light);
-     font-style: normal;
+
+/* Base style for all tags */
+.tech-tag {
+    font-size: 0.75rem;
+    font-weight: var(--font-medium);
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem; /* This creates the "pill" shape */
+    background-color: rgba(199, 112, 240, 0.1); /* A default, subtle background */
+    color: var(--accent-color); /* A default text color */
 }
+
+/* Specific colors for each technology */
+.tech-tag.js { background-color: rgba(240, 219, 79, 0.15); color: #f0db4f; }
+.tech-tag.node { background-color: rgba(104, 158, 99, 0.15); color: #689e63; }
+.tech-tag.postgres { background-color: rgba(51, 103, 145, 0.2); color: #336791; }
+.tech-tag.python { background-color: rgba(55, 118, 171, 0.2); color: #3776ab; }
+.tech-tag.pandas { background-color: rgba(213, 112, 240, 0.2); color: #d570f0; } /* Using a shade of our accent for this */
+.tech-tag.sklearn { background-color: rgba(247, 144, 61, 0.15); color: #f7903d; }
+.tech-tag.matplotlib { background-color: rgba(179, 79, 240, 0.2); color: #b34ff0; } /* Another purple variant */
+.tech-tag.jupyter { background-color: rgba(243, 114, 43, 0.2); color: #F37626; }
 
 .project-links {
     margin-top: auto; /* Push links to the bottom */
